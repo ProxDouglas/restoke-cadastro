@@ -1,0 +1,47 @@
+package com.estoke.web.controller.associacao;
+
+import com.estoke.core.associacao.model.AssociacaoDTO;
+import com.estoke.core.associacao.model.CadastroAssociacaoModel;
+import com.estoke.core.associacao.service.AssociacaoService;
+import java.util.List;
+import javax.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author vitor.alves
+ */
+@CrossOrigin(origins = "http://localhost:4200")
+@RestController
+@RequestMapping("api/internal/v1/associacoes")
+@Validated
+@AllArgsConstructor
+public class AssociacaoController {
+
+    private final AssociacaoService service;
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AssociacaoDTO> cadastrar(@Valid @RequestBody CadastroAssociacaoModel cadastroAssociacaoModel) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.cadastrar(cadastroAssociacaoModel));
+    }
+
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AssociacaoDTO> findBy(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findById(id));
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AssociacaoDTO>> findAll() {
+        return ResponseEntity.ok(service.findAll());
+    }
+}
